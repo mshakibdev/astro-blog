@@ -1,0 +1,89 @@
+# Astro Blog
+
+## Writing a post
+
+Add a Markdown file directly inside `src/content/posts/`, for example
+`my-new-post.md`. Its filename becomes its URL: `/blog/my-new-post`.
+Use lowercase, hyphen-separated filenames and do not add a `slug` override.
+
+```md
+---
+title: My new post
+description: A short summary for the homepage.
+date: 2026-09-21
+tags: [Astro, Tutorial]
+---
+
+Write your article here. Start section headings with `##` because the page
+already displays the title as its main heading.
+```
+
+Title, description, and date are required and validated when Astro syncs or
+builds the collection. Tags are optional. Use dates in `YYYY-MM-DD` format;
+dates display in UTC so they do not shift with the server's timezone.
+
+For an optional cover image, place the file in `public/images/` and add:
+
+```yaml
+cover:
+  src: /images/my-cover.jpg
+  alt: A description of the image
+```
+
+The homepage automatically lists all posts newest first. All files in this
+folder are published, including future-dated posts; there is no draft mode.
+Run `npm run build` and deploy the updated `dist/` folder to publish.
+The original two posts remain sample content, ready for you to replace.
+
+## Development
+
+Start the background server with `npm run dev -- --background`.
+Manage it with `npm run astro -- dev status`, `npm run astro -- dev logs`, and
+`npm run astro -- dev stop`.
+
+## Original starter reference
+
+```sh
+pnpm create astro@latest -- --template basics
+```
+
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+
+## 🚀 Project Structure
+
+Inside of your Astro project, you'll see the following folders and files:
+
+```text
+/
+├── public/
+│   └── favicon.svg
+├── src
+│   ├── assets
+│   │   └── astro.svg
+│   ├── components
+│   │   └── Welcome.astro
+│   ├── layouts
+│   │   └── Layout.astro
+│   └── pages
+│       └── index.astro
+└── package.json
+```
+
+To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+
+## 🧞 Commands
+
+All commands are run from the root of the project, from a terminal:
+
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `pnpm install`             | Installs dependencies                            |
+| `pnpm dev --background` | Starts the background dev server at `localhost:4321` |
+| `pnpm build`           | Build your production site to `./dist/`          |
+| `pnpm preview`         | Preview your build locally, before deploying     |
+| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+
+## 👀 Want to learn more?
+
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
