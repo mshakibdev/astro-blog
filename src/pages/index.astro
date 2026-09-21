@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import PostDate from "../components/PostDate.astro";
+
+const posts: CollectionEntry<"posts">[] = await getCollection("posts");
+posts.sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime() || a.id.localeCompare(b.id),
+);
+---
+
+<Layout title="Home">
+    <h1>Latest Posts</h1>
+
+    <div class="posts">
+        {posts.map((post) => (
+            <article>
+                <h2>
+                    <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                </h2>
+
+                <p>{post.data.description}</p>
+                <small><PostDate date={post.data.date} /></small>
+            </article>
+        ))}
+    </div>
+    {posts.length === 0 && <p>No posts yet. Check back soon!</p>}
+</Layout>
+
+<style>
+    .posts {
+        display: grid;
+        gap: 20px;
+    }
+
+    article {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px #0001;
+    }
+
+    h2 a {
+        color: #0f172a;
+        text-decoration: none;
+    }
+
+    h2 a:hover {
+        color: #0284c7;
+    }
+</style>

@@ -1,0 +1,126 @@
+---
+const { title = "Astro Blog" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>{title}</title>
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                <div class="logo">
+                    <a href="/">Astro Blog</a>
+                </div>
+
+                <div class="links">
+                    <a href="/">Home</a>
+                    <a href="/about/">About</a>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <slot />
+        </main>
+
+        <footer>© 2026 Astro Blog. All rights reserved.</footer>
+    </body>
+</html>
+
+<style>
+    :global(*), :global(*::before), :global(*::after) {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f8fafc;
+        color: #1e293b;
+    }
+
+    /* Navbar */
+
+    header {
+        background: #0f172a;
+        padding: 20px 0;
+    }
+
+    nav {
+        max-width: 1000px;
+        margin: auto;
+        padding: 0 20px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo a {
+        color: white;
+        font-size: 32px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .links {
+        display: flex;
+        gap: 30px;
+    }
+
+    .links a {
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        transition: 0.3s;
+    }
+
+    .links a:hover {
+        color: #38bdf8;
+    }
+
+    /* Content */
+
+    main {
+        max-width: 900px;
+        min-height: 600px;
+        margin: 40px auto;
+        padding: 35px;
+
+        background: white;
+        border-radius: 15px;
+
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Footer */
+
+    footer {
+        text-align: center;
+        padding: 30px;
+        color: #64748b;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 700px) {
+        main {
+            margin: 20px 12px;
+            padding: 20px;
+        }
+
+        nav {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .links {
+            gap: 15px;
+        }
+    }
+</style>

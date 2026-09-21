@@ -1,0 +1,133 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import PostDate from "../../components/PostDate.astro";
+
+export async function getStaticPaths() {
+    const posts: CollectionEntry<"posts">[] = await getCollection("posts");
+    return posts.map((post) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
+}
+
+interface Props {
+    post: CollectionEntry<"posts">;
+}
+
+const { post } = Astro.props;
+const { title, date, tags, cover } = post.data;
+const { Content } = await render(post);
+---
+
+<Layout title={title}>
+    <article>
+        <a href="/">&larr; All posts</a>
+        <header class="post-header">
+            <h1>{title}</h1>
+            <PostDate date={date} />
+            {tags.length > 0 && (
+                <ul class="tags" aria-label="Tags">
+                    {tags.map((tag) => <li>{tag}</li>)}
+                </ul>
+            )}
+        </header>
+        {cover && <img class="cover" src={cover.src} alt={cover.alt} />}
+        <div class="prose"><Content /></div>
+    </article>
+</Layout>
+
+<style>
+    article {
+        max-width: 68ch;
+        margin-inline: auto;
+        line-height: 1.8;
+        overflow-wrap: anywhere;
+    }
+
+    article a, .prose :global(a) {
+        color: #0369a1;
+        text-underline-offset: 0.2em;
+    }
+
+    .post-header {
+        margin-block: 1.5rem 2rem;
+    }
+
+    h1 {
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        line-height: 1.2;
+        margin-bottom: 1rem;
+    }
+
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0;
+        list-style: none;
+    }
+
+    .tags li {
+        background: #e0f2fe;
+        color: #075985;
+        padding: 0.15rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.875rem;
+    }
+
+    .cover, .prose :global(img) {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.75rem;
+        margin-block: 1.5rem;
+    }
+
+    .prose :global(h2), .prose :global(h3), .prose :global(h4) {
+        line-height: 1.3;
+        margin-block: 2rem 0.75rem;
+    }
+
+    .prose :global(p), .prose :global(ul), .prose :global(ol) {
+        margin-block: 1rem;
+    }
+
+    .prose :global(ul), .prose :global(ol) {
+        padding-inline-start: 1.5rem;
+    }
+
+    .prose :global(li + li) {
+        margin-top: 0.4rem;
+    }
+
+    .prose :global(blockquote) {
+        margin-inline: 0;
+        padding-left: 1rem;
+        border-left: 3px solid #0284c7;
+        color: #475569;
+    }
+
+    .prose :global(code) {
+        font-size: 0.9em;
+    }
+
+    .prose :global(:not(pre) > code) {
+        background: #f1f5f9;
+        padding: 0.15em 0.35em;
+        border-radius: 0.25rem;
+    }
+
+    .prose :global(pre) {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        line-height: 1.6;
+    }
+
+    .prose :global(hr) {
+        border: 0;
+        border-top: 1px solid #cbd5e1;
+        margin-block: 2rem;
+    }
+</style>
