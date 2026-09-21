@@ -37,6 +37,37 @@ The original two posts remain sample content, ready for you to replace.
 
 ## Development
 
+## Bilingual routes and navigation
+
+English keeps `/`, `/about/` and `/blog/<id>`. Bangla uses `/bn/`,
+`/bn/about/` and `/bn/blog/<id>`. Add Bangla articles directly in
+`src/content/posts-bn/`, using the same schema as English posts. Matching
+filenames pair articles for the language switcher. Without a matching article,
+the switcher opens the other language's homepage. The Markdown demo at
+`/mdpage` remains English-only. Bangla sample posts are separately authored examples.
+
+Shared templates live in `PostList.astro` and `PostArticle.astro`; UI labels
+live in `src/i18n.ts`. Dates use the page locale and UTC.
+
+`/api/posts.json` is a public, build-time JSON endpoint containing both languages:
+`{ posts: [{ id, locale, title, description, date, tags, url }] }`.
+Dates are ISO strings; URLs are relative to this site. Entries are grouped by
+locale, newest first within each group. Rebuild to update this static endpoint.
+It is read-only and does not expose article bodies or internal file paths.
+
+Hover prefetch is configured in `astro.config.mjs`. The shared layout uses
+Astro's `ClientRouter` with a fade transition and a non-animated fallback.
+Astro respects reduced-motion preferences; links still work without JavaScript.
+
+`src/middleware.ts` adds `X-Content-Type-Options: nosniff` and
+`Referrer-Policy: strict-origin-when-cross-origin`. Middleware runs during local
+requests and static prerendering, not for every deployed static-file request.
+`public/_headers` supplies the same headers for static hosts that support this
+format (such as Netlify and Cloudflare Pages). Other hosts need equivalent
+header configuration. No authentication or request-time backend was added.
+
+## Local commands
+
 Start the background server with `npm run dev -- --background`.
 Manage it with `npm run astro -- dev status`, `npm run astro -- dev logs`, and
 `npm run astro -- dev stop`.

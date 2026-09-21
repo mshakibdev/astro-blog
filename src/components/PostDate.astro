@@ -1,10 +1,11 @@
 ---
 interface Props {
     date: Date;
+    locale?: "en" | "bn";
 }
 
-const { date } = Astro.props;
-const formatted = new Intl.DateTimeFormat("en-US", {
+const { date, locale = "en" } = Astro.props;
+const formatted = new Intl.DateTimeFormat(locale === "bn" ? "bn-BD" : "en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",

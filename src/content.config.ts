@@ -2,9 +2,7 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
-const posts = defineCollection({
-    loader: glob({ pattern: "*.md", base: "./src/content/posts" }),
-    schema: z.object({
+const postSchema = z.object({
         title: z.string().trim().min(1),
         description: z.string().trim().min(1),
         date: z.coerce.date(),
@@ -13,7 +11,15 @@ const posts = defineCollection({
             src: z.string().regex(/^\/(?!\/)/, "Use an image path from public, starting with /"),
             alt: z.string().trim().min(1),
         }).optional(),
-    }),
+    });
+
+const posts = defineCollection({
+    loader: glob({ pattern: "*.md", base: "./src/content/posts" }),
+    schema: postSchema,
+});
+const postsBn = defineCollection({
+    loader: glob({ pattern: "*.md", base: "./src/content/posts-bn" }),
+    schema: postSchema,
 });
 
-export const collections = { posts };
+export const collections = { posts, postsBn };
