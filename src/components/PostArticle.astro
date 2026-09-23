@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import PostDate from "./PostDate.astro";
+import ReadingControls from "./ReadingControls";
 import { getPosts, postUrl, type Post } from "../lib/posts";
 import { homeUrl, ui, type Locale } from "../i18n";
 interface Props { post: Post; locale?: Locale; }
@@ -27,7 +28,9 @@ const { Content } = await render(post);
             )}
         </header>
         {cover && <img class="cover" src={cover.src} alt={cover.alt} />}
-        <div class="prose"><Content /></div>
+        <ReadingControls locale={locale} client:load>
+            <div class="prose"><Content /></div>
+        </ReadingControls>
     </article>
 </Layout>
 
@@ -113,6 +116,7 @@ const { Content } = await render(post);
     }
 
     .prose :global(pre) {
+        max-width: 100%;
         padding: 1rem;
         border-radius: 0.5rem;
         overflow-x: auto;

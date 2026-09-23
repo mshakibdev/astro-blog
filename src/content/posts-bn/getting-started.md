@@ -10,3 +10,22 @@ Astro দিয়ে ব্লগের মতো কনটেন্টভি�
 ## প্রথম লেখা প্রকাশ
 
 Markdown ফাইলে শিরোনাম, সংক্ষিপ্ত বিবরণ ও তারিখ যোগ করুন। এরপর মূল লেখাটি লিখুন। সাইট তৈরি হলে লেখাটি স্বয়ংক্রিয়ভাবে হোমপেজে দেখা যাবে।
+
+## কোডের উদাহরণ
+
+```bash
+npm run dev -- --background
+```
+
+```astro
+---
+const greeting = "স্বাগতম!";
+---
+
+<h1>{greeting}</h1>
+```
+
+```js
+const posts = ["Astro", "JavaScript"];
+console.log(posts.length);
+```

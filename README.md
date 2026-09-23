@@ -68,6 +68,22 @@ header configuration. No authentication or request-time backend was added.
 
 ## Local commands
 
+## Code highlighting and React
+
+Markdown fenced code blocks use Shiki's `github-dark` theme. Put a language
+name after the opening fence, such as `js`, `astro`, `bash`, or `ts`.
+Highlighting is generated at build time and needs no browser JavaScript.
+Long lines scroll horizontally. Both getting-started posts contain examples.
+
+React is enabled through `@astrojs/react`. `ReadingControls.tsx` is an
+interactive island in article pages, hydrated using `client:load`. Readers can
+adjust article text from 90% to 140% and reset it to 100%. Labels follow the
+page language. The setting is local to the mounted article, not saved to storage.
+Without JavaScript, the article remains readable and the controls stay disabled.
+React's JSX types are configured in `tsconfig.json`.
+
+## Running locally
+
 Start the background server with `npm run dev -- --background`.
 Manage it with `npm run astro -- dev status`, `npm run astro -- dev logs`, and
 `npm run astro -- dev stop`.
