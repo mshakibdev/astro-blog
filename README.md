@@ -22,20 +22,29 @@ Title, description, and date are required and validated when Astro syncs or
 builds the collection. Tags are optional. Use dates in `YYYY-MM-DD` format;
 dates display in UTC so they do not shift with the server's timezone.
 
-For an optional cover image, place the file in `public/images/` and add:
+For an optional optimized cover image, place the file in `src/assets/` and add
+a path relative to the Markdown file:
 
 ```yaml
 cover:
-  src: /images/my-cover.jpg
+  src: ../../assets/my-cover.jpg
   alt: A description of the image
 ```
 
 The homepage automatically lists all posts newest first. All files in this
 folder are published, including future-dated posts; there is no draft mode.
-Run `npm run build` and deploy the updated `dist/` folder to publish.
+Run `npm run build`, then deploy to a Node-capable host as described below.
 The original two posts remain sample content, ready for you to replace.
 
-## Development
+## Images
+
+The collection's `image()` helper validates local covers and reads dimensions.
+`CoverImage.astro` generates responsive WebP images at 320, 640 and 800 pixels,
+with explicit dimensions to reserve layout space. Listing covers load lazily;
+article covers load eagerly. Both getting-started posts use a sample workflow
+diagram. For best quality use raster source images at least 800 pixels wide.
+Old `/images/...` cover paths must be moved from public into src/assets and
+updated to relative paths. Ordinary public images remain available unprocessed.
 
 ## Bilingual routes and navigation
 
@@ -64,9 +73,39 @@ Astro respects reduced-motion preferences; links still work without JavaScript.
 requests and static prerendering, not for every deployed static-file request.
 `public/_headers` supplies the same headers for static hosts that support this
 format (such as Netlify and Cloudflare Pages). Other hosts need equivalent
-header configuration. No authentication or request-time backend was added.
+header configuration for static responses. Middleware also runs per request
+on the new on-demand updates pages. No authentication was added.
 
-## Local commands
+## Data fetching and on-demand pages
+
+`/updates/` and `/bn/updates/` set `prerender = false`. They fetch the latest
+release from the fixed public GitHub API endpoint for withastro/astro at request
+time. The response is validated, with a five-second timeout and a localized
+fallback for network errors, rate limits and invalid data. Release names are
+displayed as escaped text; release URLs are restricted to Astro's GitHub releases.
+No API key is required. These pages use `Cache-Control: no-store`; navigation
+links disable prefetch to avoid unnecessary upstream requests. The displayed
+UTC timestamp records each fetch attempt, even if the upstream request fails.
+
+The other pages and `/api/posts.json` remain generated at build time.
+
+## Production deployment
+
+The Node adapter runs in standalone mode. This project now needs a Node server
+for the updates routes; a static-only upload cannot run those routes.
+Build using `npm run build`, then start using `npm start` with production
+dependencies installed. Keep both `dist/server/` and `dist/client/` together.
+Configure `HOST` and `PORT` for your host. For a local PowerShell smoke test:
+
+```powershell
+$env:HOST = '127.0.0.1'
+$env:PORT = '4322'
+npm start
+```
+
+The Node server serves static assets from dist/client and renders the updates
+pages on demand. GitHub availability affects only the updates page, not builds
+or the existing articles. Session features are not used by the blog.
 
 ## Code highlighting and React
 

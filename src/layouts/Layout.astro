@@ -25,6 +25,7 @@ const text = ui[locale];
                 <div class="links">
                     <a href={homeUrl(locale)}>{text.home}</a>
                     <a href={`${homeUrl(locale)}about/`}>{text.about}</a>
+                    <a href={`${homeUrl(locale)}updates/`} data-astro-prefetch="false" data-astro-reload>{locale === "bn" ? "আপডেট" : "Updates"}</a>
                     <a href={alternateHref} lang={locale === "en" ? "bn" : "en"} hreflang={locale === "en" ? "bn" : "en"}>{locale === "en" ? "বাংলা" : "English"}</a>
                 </div>
             </nav>

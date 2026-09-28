@@ -1,14 +1,14 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, type SchemaContext } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
-const postSchema = z.object({
+const postSchema = ({ image }: SchemaContext) => z.object({
         title: z.string().trim().min(1),
         description: z.string().trim().min(1),
         date: z.coerce.date(),
         tags: z.array(z.string().trim().min(1)).default([]),
         cover: z.object({
-            src: z.string().regex(/^\/(?!\/)/, "Use an image path from public, starting with /"),
+            src: image(),
             alt: z.string().trim().min(1),
         }).optional(),
     });

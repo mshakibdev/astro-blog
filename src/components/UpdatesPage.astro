@@ -1,0 +1,34 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PostDate from "./PostDate.astro";
+import { getLatestRelease } from "../lib/releases";
+import type { Locale } from "../i18n";
+interface Props { locale?: Locale; }
+const { locale = "en" } = Astro.props;
+const bn = locale === "bn";
+const release = await getLatestRelease();
+const checkedAt = new Date().toISOString();
+Astro.response.headers.set("Cache-Control", "no-store");
+---
+<Layout title={bn ? "Astro আপডেট" : "Astro updates"} locale={locale}
+    alternateHref={bn ? "/updates/" : "/bn/updates/"}>
+    <h1>{bn ? "Astro আপডেট" : "Astro updates"}</h1>
+    <p>{bn ? "Astro-এর GitHub পৃষ্ঠা থেকে সর্বশেষ প্রকাশনার তথ্য।" : "Latest release information from Astro’s GitHub repository."}</p>
+    {release ? (
+        <section aria-label={bn ? "সর্বশেষ প্রকাশনা" : "Latest release"}>
+            <h2>{release.name || release.tag_name}</h2>
+            <p><PostDate date={new Date(release.published_at)} locale={locale} /></p>
+            <a href={release.html_url}>{bn ? "প্রকাশনার বিস্তারিত দেখুন" : "Read release notes"}</a>
+        </section>
+    ) : (
+        <p role="status">{bn ? "এই মুহূর্তে আপডেট আনা যাচ্ছে না। পরে আবার চেষ্টা করুন।" : "Release information is temporarily unavailable. Please try again later."}</p>
+    )}
+    <p><a href="https://github.com/withastro/astro/releases">{bn ? "সব প্রকাশনা" : "All releases on GitHub"}</a></p>
+    <p class="checked">{bn ? "সর্বশেষ চেষ্টা (UTC):" : "Last checked (UTC):"} <time datetime={checkedAt}>{checkedAt}</time></p>
+    <a href={bn ? "/bn/updates/" : "/updates/"} data-astro-reload data-astro-prefetch="false">{bn ? "আবার দেখুন" : "Check again"}</a>
+</Layout>
+<style>
+    section { padding: 1.5rem; border: 1px solid #cbd5e1; border-radius: 12px; }
+    a { color: #0369a1; }
+    .checked { color: #475569; font-size: 0.9rem; overflow-wrap: anywhere; }
+</style>
