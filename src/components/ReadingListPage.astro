@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SavePostForm from "./SavePostForm.astro";
+import { homeUrl, type Locale } from "../i18n";
+import { getPosts, postUrl } from "../lib/posts";
+interface Props { locale: Locale; failed?: boolean; }
+const { locale, failed = false } = Astro.props;
+const savedKeys = await Astro.session?.get("savedPosts") ?? [];
+const posts = await getPosts(locale);
+const saved = posts.filter((post) => savedKeys.includes(`${locale}:${post.id}`));
+const title = locale === "bn" ? "পড়ার তালিকা" : "Reading list";
+---
+<Layout title={title} locale={locale} alternateHref={`${homeUrl(locale === "en" ? "bn" : "en")}reading-list/`}>
+    <h1>{title}</h1>
+    <p>{locale === "bn" ? "এই ব্রাউজারে রাখা এই ভাষার লেখাগুলো।" : "Articles saved in this browser for this language."}</p>
+    {failed && <p role="alert">{locale === "bn" ? "পরিবর্তনটি সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।" : "Could not update your list. Please try again."}</p>}
+    {saved.length === 0 && <p>{locale === "bn" ? "এখনো কোনো লেখা রাখা হয়নি।" : "No saved articles yet."}</p>}
+    {saved.map((post) => <section><h2><a href={postUrl(locale, post.id)}>{post.data.title}</a></h2><SavePostForm id={post.id} locale={locale} saved /></section>)}
+    <h2>{locale === "bn" ? "আরও লেখা" : "More articles"}</h2>
+    {posts.filter((post) => !savedKeys.includes(`${locale}:${post.id}`)).map((post) => <section><h3><a href={postUrl(locale, post.id)}>{post.data.title}</a></h3><SavePostForm id={post.id} locale={locale} saved={false} /></section>)}
+</Layout>
+<style>
+    section { padding-block: 1rem; border-bottom: 1px solid #e2e8f0; }
+    a { color: #0369a1; }
+</style>

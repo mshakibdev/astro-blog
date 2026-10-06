@@ -3,7 +3,7 @@ import { render } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import PostDate from "./PostDate.astro";
 import ReadingControls from "./ReadingControls";
-import CoverImage from "./CoverImage.astro";
+import SavedPostIsland from "./SavedPostIsland.astro";
 import { getPosts, postUrl, type Post } from "../lib/posts";
 import { homeUrl, ui, type Locale } from "../i18n";
 interface Props { post: Post; locale?: Locale; }
@@ -28,7 +28,10 @@ const { Content } = await render(post);
                 </ul>
             )}
         </header>
-        {cover && <CoverImage src={cover.src} alt={cover.alt} eager />}
+        <SavedPostIsland id={post.id} locale={locale} server:defer>
+            <p slot="fallback"><a href={`${homeUrl(locale)}reading-list/`} data-astro-reload data-astro-prefetch="false">{locale === "bn" ? "পড়ার তালিকা খুলুন" : "Open your reading list"}</a></p>
+        </SavedPostIsland>
+        {cover && <img class="cover" src={cover.src} alt={cover.alt} />}
         <ReadingControls locale={locale} client:load>
             <div class="prose"><Content /></div>
         </ReadingControls>

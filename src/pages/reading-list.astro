@@ -1,0 +1,10 @@
+---
+export const prerender = false;
+import { actions } from "astro:actions";
+import ReadingListPage from "../components/ReadingListPage.astro";
+Astro.cache.set(false);
+Astro.response.headers.set("Cache-Control", "private, no-store");
+const result = Astro.getActionResult(actions.setSaved);
+if (result && !result.error) return Astro.redirect("/reading-list/", 303);
+---
+<ReadingListPage locale="en" failed={!!result?.error} />

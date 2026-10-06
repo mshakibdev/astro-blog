@@ -1,0 +1,16 @@
+---
+import { actions } from "astro:actions";
+import { homeUrl, type Locale } from "../i18n";
+interface Props { id: string; locale: Locale; saved: boolean; }
+const { id, locale, saved } = Astro.props;
+---
+<form method="POST" action={`${homeUrl(locale)}reading-list/${actions.setSaved}`} data-astro-reload>
+    <input type="hidden" name="id" value={id} />
+    <input type="hidden" name="locale" value={locale} />
+    <input type="hidden" name="operation" value={saved ? "remove" : "save"} />
+    <button type="submit">{locale === "bn" ? (saved ? "তালিকা থেকে সরান" : "পরে পড়ার জন্য রাখুন") : (saved ? "Remove from reading list" : "Save for later")}</button>
+</form>
+<style>
+    button { font: inherit; padding: 0.55rem 0.85rem; border: 1px solid #0369a1; border-radius: 8px; color: #075985; background: #f0f9ff; cursor: pointer; }
+    button:focus-visible { outline: 3px solid #0284c7; outline-offset: 3px; }
+</style>

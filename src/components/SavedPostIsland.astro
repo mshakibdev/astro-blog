@@ -1,0 +1,19 @@
+---
+import SavePostForm from "./SavePostForm.astro";
+import { homeUrl, type Locale } from "../i18n";
+interface Props { id: string; locale: Locale; }
+const { id, locale } = Astro.props;
+Astro.cache.set(false);
+Astro.response.headers.set("Cache-Control", "private, no-store");
+const savedPosts = await Astro.session?.get("savedPosts") ?? [];
+const saved = savedPosts.includes(`${locale}:${id}`);
+---
+<aside aria-label={locale === "bn" ? "পড়ার তালিকা" : "Reading list"}>
+    <p>{locale === "bn" ? (saved ? "এই লেখাটি আপনার তালিকায় আছে।" : "লেখাটি পরে পড়ার জন্য রাখতে পারেন।") : (saved ? "This article is in your reading list." : "Keep this article for later.")}</p>
+    <SavePostForm id={id} locale={locale} saved={saved} />
+    <p><a href={`${homeUrl(locale)}reading-list/`} data-astro-reload data-astro-prefetch="false">{locale === "bn" ? "আপনার পড়ার তালিকা" : "Your reading list"}</a></p>
+</aside>
+<style>
+    aside { margin-block: 1.5rem; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 12px; }
+    a { color: #0369a1; }
+</style>
